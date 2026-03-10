@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/navbar";
 import { TranslationProvider } from "@/lib/translation-provider";
+import { Toaster } from "sonner";
 
 import { AudioProvider } from "@/lib/audio-provider";
 import { GlobalAudioPlayer } from "@/components/global-audio-player";
@@ -49,6 +50,7 @@ export default function RootLayout({
               <GlobalAudioPlayer />
             </AudioProvider>
           </TranslationProvider>
+          <Toaster position="top-center" richColors />
         </ThemeProvider>
       </body>
     </html>

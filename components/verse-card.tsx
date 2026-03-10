@@ -12,6 +12,7 @@ import {
 import { useTranslation } from "@/lib/translation-provider";
 import { useAudio } from "@/lib/audio-provider";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 const TAFSIRS = [
     { id: 165, name: "Tafsir Ahsanul Bayaan", lang: "bn" },
@@ -86,6 +87,7 @@ export function VerseCard({
     const handleCopy = () => {
         const textToCopy = `${chapterName} (${verse.verseKey})\n\n${verse.textUthmani}\n\n${bengaliTranslation || englishTranslation}\n\nhttps://quran.com/${verse.verseKey.replace(':', '/')}`;
         navigator.clipboard.writeText(textToCopy);
+        toast.success("Verse copied!");
     };
 
     const verseHtml = (

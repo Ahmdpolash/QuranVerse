@@ -24,6 +24,10 @@ interface AudioContextType {
     playChapter: (chapterId: number, startVerseKey?: string) => Promise<void>;
     playVerse: (verseKey: string, chapterId: number) => Promise<void>;
     seekTo: (time: number) => void;
+    playNextVerse: () => void;
+    playPrevVerse: () => void;
+    closeAudio: () => void;
+    audioData: AudioData | null;
 }
 
 const AudioContext = createContext<AudioContextType | undefined>(undefined);
@@ -158,6 +162,42 @@ export function AudioProvider({ children }: { children: ReactNode }) {
         }
     };
 
+    const closeAudio = () => {
+        if (audioRef.current) {
+            audioRef.current.pause();
+            audioRef.current.currentTime = 0;
+        }
+        setIsPlaying(false);
+        setCurrentChapterId(null);
+        setActiveVerseKey(null);
+        setAudioData(null);
+    };
+
+    const playNextVerse = () => {
+        if (!audioData || !activeVerseKey || !audioRef.current) return;
+        const index = audioData.timings.findIndex(t => t.verse_key === activeVerseKey);
+        if (index !== -1 && index < audioData.timings.length - 1) {
+            const nextTiming = audioData.timings[index + 1];
+            audioRef.current.currentTime = nextTiming.timestamp_from / 1000;
+            audioRef.current.play();
+            setActiveVerseKey(nextTiming.verse_key);
+        }
+    };
+
+    const playPrevVerse = () => {
+        if (!audioData || !activeVerseKey || !audioRef.current) return;
+        const index = audioData.timings.findIndex(t => t.verse_key === activeVerseKey);
+        if (index > 0) {
+            const prevTiming = audioData.timings[index - 1];
+            audioRef.current.currentTime = prevTiming.timestamp_from / 1000;
+            audioRef.current.play();
+            setActiveVerseKey(prevTiming.verse_key);
+        } else if (index === 0) {
+            audioRef.current.currentTime = audioData.timings[0].timestamp_from / 1000;
+            audioRef.current.play();
+        }
+    };
+
     return (
         <AudioContext.Provider value={{
             isPlaying,
@@ -168,7 +208,11 @@ export function AudioProvider({ children }: { children: ReactNode }) {
             togglePlayPause,
             playChapter,
             playVerse,
-            seekTo
+            seekTo,
+            playNextVerse,
+            playPrevVerse,
+            closeAudio,
+            audioData
         }}>
             {children}
         </AudioContext.Provider>

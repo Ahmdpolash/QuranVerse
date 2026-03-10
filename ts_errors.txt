@@ -1,0 +1,1 @@
+app/quran/[id]/page.tsx(49,90): error TS2339: Property 'chapters' does not exist on type 'never'.

@@ -46,7 +46,7 @@ export default async function ChapterPage({ params }: Props) {
     }
 
     const verses: any[] = Array.isArray(versesData) ? versesData : [];
-    const chaptersList: any[] = Array.isArray(allChapters) ? allChapters : (allChapters?.chapters || []);
+    const chaptersList: any[] = Array.isArray(allChapters) ? allChapters : ((allChapters as any)?.chapters || []);
 
     return (
         <main className="min-h-screen bg-background text-foreground pb-20 flex">
