@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { BookOpen, Share2, MessageSquare, Play, X, Bookmark, Copy, Flag, MoreHorizontal, FileText } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import { BookOpen, Share2, MessageSquare, Play, Pause, X, Bookmark, Copy, Flag, MoreHorizontal, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     Sheet,
@@ -26,12 +26,14 @@ export function VerseCard({
     verse,
     englishTranslation,
     bengaliTranslation,
-    chapterName
+    chapterName,
+    chapterId
 }: {
     verse: any,
     englishTranslation: string,
     bengaliTranslation: string,
-    chapterName: string
+    chapterName: string,
+    chapterId: string
 }) {
     const { language } = useTranslation();
     const { activeVerseKey, isPlaying, playVerse } = useAudio();
@@ -40,8 +42,18 @@ export function VerseCard({
     const [tafsirData, setTafsirData] = useState<string | null>(null);
     const [isLoadingTafsir, setIsLoadingTafsir] = useState(false);
 
+    // Add ref for auto-scrolling
+    const cardRef = React.useRef<HTMLDivElement>(null);
+
     const isCurrentVersePlaying = isPlaying && activeVerseKey === verse.verseKey;
     const isCurrentVerseActive = activeVerseKey === verse.verseKey;
+
+    // Auto scroll when active
+    React.useEffect(() => {
+        if (isCurrentVerseActive && cardRef.current && !isTafsirOpen) {
+            cardRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }, [isCurrentVerseActive, isTafsirOpen]);
 
     const fetchTafsir = async (tafsirId: number) => {
         setActiveTafsir(tafsirId);
@@ -68,31 +80,56 @@ export function VerseCard({
     };
 
     const handleRecite = () => {
-        playVerse(verse.verseKey, parseInt(verse.chapterId, 10));
+        playVerse(verse.verseKey, parseInt(chapterId, 10));
+    };
+
+    const handleCopy = () => {
+        const textToCopy = `${chapterName} (${verse.verseKey})\n\n${verse.textUthmani}\n\n${bengaliTranslation || englishTranslation}\n\nhttps://quran.com/${verse.verseKey.replace(':', '/')}`;
+        navigator.clipboard.writeText(textToCopy);
     };
 
     const verseHtml = (
-        <div className={cn("flex flex-col gap-6 md:gap-8 p-4 sm:p-6 rounded-2xl transition-all duration-500",
-            isCurrentVerseActive ? "bg-emerald-500/10 shadow-sm border border-emerald-500/20" : "bg-transparent border-transparent"
-        )}>
+        <div
+            ref={cardRef}
+            className={cn("flex flex-col gap-6 md:gap-8 p-6 md:p-8 rounded-2xl transition-all duration-500",
+                isCurrentVerseActive
+                    ? "bg-emerald-50 shadow-md border-emerald-500/30 dark:bg-emerald-950/20 dark:border-emerald-500/20 border-2"
+                    : "bg-white dark:bg-card shadow-sm border border-border/40 hover:border-border hover:shadow-md"
+            )}>
+            {/* Top Action Bar */}
+            <div className="flex items-center justify-between w-full">
+                <div className="flex items-center gap-4 text-muted-foreground">
+                    <span className="font-semibold text-lg text-primary">{verse.verseKey}</span>
+                    <button onClick={handleRecite} className="hover:text-emerald-600 transition-colors cursor-pointer" title="Play Verse">
+                        {isCurrentVerseActive && isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5" />}
+                    </button>
+                    <button className="hover:text-emerald-600 transition-colors cursor-pointer" title="Bookmark">
+                        <Bookmark className="w-5 h-5" />
+                    </button>
+                </div>
+                <div className="flex items-center gap-4 text-muted-foreground">
+                    <button className="hover:text-emerald-600 transition-colors cursor-pointer" onClick={handleCopy} title="Copy Verse text">
+                        <Copy className="w-5 h-5" />
+                    </button>
+                    <button className="hover:text-emerald-600 transition-colors cursor-pointer" title="Share Verse">
+                        <Share2 className="w-5 h-5" />
+                    </button>
+                    <button className="hover:text-emerald-600 transition-colors cursor-pointer" title="More Options">
+                        <MoreHorizontal className="w-5 h-5" />
+                    </button>
+                </div>
+            </div>
+
             <div className="flex flex-col w-full">
                 <p className={cn(
-                    "text-3xl md:text-5xl font-arabic text-right leading-loose md:leading-[2.5] transition-colors duration-500",
-                    isCurrentVerseActive ? "text-emerald-600 dark:text-emerald-400" : "text-primary"
-                )} dir="rtl">
+                    "text-3xl md:text-5xl font-arabic text-right leading-loose md:leading-[2.5] transition-colors duration-500 cursor-pointer",
+                    isCurrentVerseActive ? "text-emerald-700 dark:text-emerald-400" : "text-primary hover:text-emerald-600 dark:hover:text-emerald-500"
+                )} dir="rtl" onClick={handleRecite} title="Click to play audio">
                     {verse.textUthmani}
                 </p>
             </div>
             <div className="flex flex-col gap-4 w-full">
                 <div className="flex items-start gap-4 mt-2">
-                    {!isTafsirOpen && (
-                        <div className={cn(
-                            "w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 text-sm mt-1 transition-colors duration-500",
-                            isCurrentVerseActive ? "bg-emerald-600 text-white" : "bg-secondary/10 text-primary"
-                        )}>
-                            {verse.verseNumber}
-                        </div>
-                    )}
                     <div className="flex-1 space-y-4">
                         {language === "bn" && bengaliTranslation && (
                             <p className="text-lg md:text-xl font-bengali text-foreground/90 leading-relaxed text-balance">
@@ -109,21 +146,9 @@ export function VerseCard({
                             <div className="flex items-center gap-6 mt-6 pt-4 border-t border-border/10">
                                 <button
                                     onClick={handleOpenTafsir}
-                                    className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
+                                    className="text-sm font-medium text-emerald-600/80 dark:text-emerald-400/80 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors flex items-center gap-2 px-3 py-1.5 rounded-md hover:bg-emerald-50 dark:hover:bg-emerald-950/30 cursor-pointer"
                                 >
                                     <BookOpen className="w-4 h-4" /> {language === "en" ? "Tafsir" : "তাফসির"}
-                                </button>
-                                <button
-                                    onClick={handleRecite}
-                                    className={cn(
-                                        "text-sm font-medium transition-colors flex items-center gap-2",
-                                        isCurrentVerseActive ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground hover:text-primary"
-                                    )}
-                                >
-                                    <Play className="w-4 h-4" /> {language === "en" ? "Recite" : "পাঠ"}
-                                </button>
-                                <button className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
-                                    <MessageSquare className="w-4 h-4" /> {language === "en" ? "Reflect" : "প্রতিফলন"}
                                 </button>
                             </div>
                         )}
@@ -135,7 +160,7 @@ export function VerseCard({
 
     return (
         <>
-            <div className="pb-8 border-b border-border/20 last:border-0 relative">
+            <div className="pb-8 relative">
                 {verseHtml}
             </div>
 
