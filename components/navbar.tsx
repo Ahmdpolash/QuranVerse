@@ -19,7 +19,7 @@ export function Navbar() {
 
                 {/* Desktop Nav in Center */}
                 <div className="hidden md:flex items-center justify-center gap-8 flex-1">
-                    <Link href="/" className="text-sm font-medium transition-colors hover:text-primary text-foreground/80 flex items-center gap-1.5">
+                    <Link href="/99-names" className="text-sm font-medium transition-colors hover:text-primary text-foreground/80 flex items-center gap-1.5">
                         <Sparkles className="w-4 h-4 text-emerald-600" />
                         99 Names (আসমাউল হুসনা)
                     </Link>
@@ -53,7 +53,7 @@ export function Navbar() {
                                     </SheetTitle>
                                 </SheetHeader>
                                 <div className="flex flex-col gap-4">
-                                    <Link href="/" className="px-2 py-2 text-sm font-medium  transition-colors hover:bg-secondary rounded-md">
+                                    <Link href="/99-names" className="px-2 py-2 text-sm font-medium  transition-colors hover:bg-secondary rounded-md">
                                         99 Names (আসমাউল হুসনা)
                                     </Link>
                                     <Link href="/quran" className="px-2 py-2 text-sm font-medium transition-colors hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 rounded-md flex items-center gap-2">
