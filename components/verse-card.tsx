@@ -56,6 +56,17 @@ export function VerseCard({
         }
     }, [isCurrentVerseActive, isTafsirOpen]);
 
+    // Handle language change for Tafsir
+    React.useEffect(() => {
+        if (activeTafsir) {
+            const currentTafsirObj = TAFSIRS.find(t => t.id === activeTafsir);
+            if (currentTafsirObj && currentTafsirObj.lang !== language) {
+                const defaultId = language === "en" ? 169 : 165;
+                fetchTafsir(defaultId);
+            }
+        }
+    }, [language, activeTafsir]);
+
     const fetchTafsir = async (tafsirId: number) => {
         setActiveTafsir(tafsirId);
         setIsLoadingTafsir(true);
@@ -74,7 +85,8 @@ export function VerseCard({
 
     const handleOpenTafsir = () => {
         setIsTafsirOpen(true);
-        if (!tafsirData) {
+        const currentTafsirObj = TAFSIRS.find(t => t.id === activeTafsir);
+        if (!tafsirData || (currentTafsirObj && currentTafsirObj.lang !== language)) {
             const defaultId = language === "en" ? 169 : 165;
             fetchTafsir(defaultId);
         }
@@ -174,9 +186,9 @@ export function VerseCard({
                                 {chapterName} <span className="opacity-50">▾</span>
                             </div>
                             <div className="flex items-center bg-secondary/10 rounded-md overflow-hidden">
-                                <button className="px-3 py-1.5 hover:bg-secondary/20 border-r border-border/10 text-xs">{"<-"}</button>
+                                {/* <button className="px-3 py-1.5 hover:bg-secondary/20 border-r border-border/10 text-xs">{"<-"}</button>
                                 <button className="px-3 py-1.5 hover:bg-secondary/20 border-r border-border/10 text-xs">{">"}</button>
-                                <button className="px-3 py-1.5 hover:bg-secondary/20 text-xs">{"⤢"}</button>
+                                <button className="px-3 py-1.5 hover:bg-secondary/20 text-xs">{"⤢"}</button> */}
                             </div>
                         </div>
 
@@ -186,19 +198,7 @@ export function VerseCard({
                     <div className="flex-1 overflow-y-auto p-6 md:p-10 custom-scrollbar relative">
                         <div className="max-w-4xl mx-auto space-y-8">
                             {/* Verse Actions Header */}
-                            <div className="flex items-center justify-between text-muted-foreground">
-                                <div className="flex items-center gap-4">
-                                    <span className="font-bold text-foreground text-lg">{verse.verseKey}</span>
-                                    <button className="hover:text-primary transition-colors"><Play className="w-5 h-5 fill-current" /></button>
-                                    <button className="hover:text-primary transition-colors"><Bookmark className="w-5 h-5" /></button>
-                                </div>
-                                <div className="flex items-center gap-4">
-                                    <button className="hover:text-primary transition-colors"><Copy className="w-5 h-5" /></button>
-                                    <button className="hover:text-primary transition-colors"><Share2 className="w-5 h-5" /></button>
-                                    <button className="hover:text-primary transition-colors"><Flag className="w-5 h-5" /></button>
-                                    <button className="hover:text-primary transition-colors"><MoreHorizontal className="w-5 h-5" /></button>
-                                </div>
-                            </div>
+
 
                             {/* The Verse & Translations in Modal */}
                             <div className="py-6 border-b border-border/10">
@@ -207,10 +207,10 @@ export function VerseCard({
 
                             {/* Tafsir Tools / Tabs */}
                             <div className="flex flex-wrap items-center gap-2 pt-4">
-                                <Button variant="outline" size="sm" className="bg-secondary/10 text-xs h-8">Aa</Button>
+                                {/* <Button variant="outline" size="sm" className="bg-secondary/10 text-xs h-8">Aa</Button>
                                 <Button variant="outline" size="sm" className="bg-secondary/10 text-xs h-8">
                                     {language === "en" ? "English ▾" : "বাংলা ▾"}
-                                </Button>
+                                </Button> */}
 
                                 {TAFSIRS.filter(t => t.lang === language).map(t => (
                                     <Button

@@ -20,7 +20,7 @@ export function PlaySurahButton({ chapterId }: { chapterId: number }) {
     return (
         <Button
             onClick={handlePlayToggle}
-            className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full font-medium shadow-md px-6 my-2"
+            className="gap-2 cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white rounded-full font-medium shadow-md px-6 my-2"
         >
             {isThisSurahPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current" />}
             {isThisSurahPlaying ? "Pause Surah" : "Play Surah"}

@@ -28,8 +28,27 @@ const amiri = Amiri({
 });
 
 export const metadata: Metadata = {
-  title: "99 Names of Allah",
-  description: "Learn the beautiful names of Allah, their meanings, virtues, and listen to their pronunciation.",
+  title: {
+    default: "QuranVerse | All-in-One Islamic Platform",
+    template: "%s | QuranVerse"
+  },
+  description: "Your comprehensive digital Islamic platform. Explore the Holy Quran, Hadith, 99 Names of Allah, and more with translations, tafsirs, and audio recitations.",
+  keywords: ["Quran", "Islam", "Allah", "99 Names", "Hadith", "Tafsir", "Audio Quran", "Islamic Platform", "Muslim"],
+  authors: [{ name: "Polash Ahmed" }],
+  creator: "Polash Ahmed",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://quranverse.com",
+    title: "QuranVerse | All-in-One Islamic Platform",
+    description: "Your comprehensive digital Islamic platform. Explore the Holy Quran, Hadith, 99 Names of Allah, and more with translations, tafsirs, and audio recitations.",
+    siteName: "QuranVerse",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "QuranVerse | All-in-One Islamic Platform",
+    description: "Your comprehensive digital Islamic platform. Explore the Holy Quran, Hadith, 99 Names of Allah, and more.",
+  },
 };
 
 export default function RootLayout({

@@ -12,15 +12,16 @@ export function Navbar() {
                 {/* Brand */}
                 <div className="flex items-center gap-2 md:w-[200px] shrink-0">
                     <Link href="/" className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors">
-                        <Sparkles className="w-5 h-5 text-emerald-600" />
+                        {/* <Sparkles className="w-5 h-5 text-emerald-600" /> */}
                         <span className="font-bold text-lg font-poppins">QuranVerse</span>
                     </Link>
                 </div>
 
                 {/* Desktop Nav in Center */}
                 <div className="hidden md:flex items-center justify-center gap-8 flex-1">
-                    <Link href="/" className="text-sm font-medium transition-colors hover:text-primary text-foreground/80">
-                        99 Names
+                    <Link href="/" className="text-sm font-medium transition-colors hover:text-primary text-foreground/80 flex items-center gap-1.5">
+                        <Sparkles className="w-4 h-4 text-emerald-600" />
+                        99 Names (আসমাউল হুসনা)
                     </Link>
                     <Link href="/quran" className="text-sm font-medium transition-colors hover:text-emerald-600 text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5" title="Qur'an">
                         <BookOpen className="w-4 h-4" />
@@ -52,8 +53,8 @@ export function Navbar() {
                                     </SheetTitle>
                                 </SheetHeader>
                                 <div className="flex flex-col gap-4">
-                                    <Link href="/" className="px-2 py-2 text-sm font-medium transition-colors hover:bg-secondary rounded-md">
-                                        99 Names
+                                    <Link href="/" className="px-2 py-2 text-sm font-medium  transition-colors hover:bg-secondary rounded-md">
+                                        99 Names (আসমাউল হুসনা)
                                     </Link>
                                     <Link href="/quran" className="px-2 py-2 text-sm font-medium transition-colors hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 rounded-md flex items-center gap-2">
                                         <BookOpen className="w-4 h-4" />
