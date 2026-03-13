@@ -1,45 +1,18 @@
 "use client";
 
 import { AllahName, getAudioUrl } from "@/lib/data";
-import { ArrowLeft, Share2, PlayCircle, PauseCircle, Heart, RefreshCw, Smartphone } from "lucide-react";
+import { ArrowLeft, Share2, Heart, RefreshCw, Smartphone } from "lucide-react";
 import Link from "next/link";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function NameDetailsClient({ name }: { name: AllahName }) {
-    const [isPlaying, setIsPlaying] = useState(false);
-    const audioRef = useRef<HTMLAudioElement | null>(null);
-
     // Tasbih Mode State
     const [tasbihMode, setTasbihMode] = useState(false);
     const [tasbihCount, setTasbihCount] = useState(0);
-
-    useEffect(() => {
-        if (typeof window !== "undefined") {
-            audioRef.current = new Audio(getAudioUrl(name));
-            audioRef.current.onended = () => setIsPlaying(false);
-        }
-        return () => {
-            if (audioRef.current) {
-                audioRef.current.pause();
-                audioRef.current = null;
-            }
-        };
-    }, [name]);
-
-    const togglePlay = () => {
-        if (!audioRef.current) return;
-        if (isPlaying) {
-            audioRef.current.pause();
-            setIsPlaying(false);
-        } else {
-            audioRef.current.play();
-            setIsPlaying(true);
-        }
-    };
 
     const handleShare = async () => {
         try {
@@ -115,29 +88,6 @@ export function NameDetailsClient({ name }: { name: AllahName }) {
                             </p>
                         </div>
 
-                        <Button
-                            onClick={togglePlay}
-                            size="lg"
-                            className="rounded-full w-20 h-20 shadow-xl bg-primary hover:bg-primary/90 text-primary-foreground transform hover:scale-105 transition-all"
-                        >
-                            {isPlaying ? (
-                                <PauseCircle className="!w-12 !h-12" />
-                            ) : (
-                                <PlayCircle className="!w-12 !h-12 pl-1" />
-                            )}
-                        </Button>
-                        {isPlaying && (
-                            <div className="flex gap-1 items-center justify-center h-4 mt-2 fade-in">
-                                {[1, 2, 3, 4, 5].map((i) => (
-                                    <motion.div
-                                        key={i}
-                                        className="w-1 bg-accent rounded-full"
-                                        animate={{ height: ["4px", "16px", "4px"] }}
-                                        transition={{ repeat: Infinity, duration: 0.8, delay: i * 0.1 }}
-                                    />
-                                ))}
-                            </div>
-                        )}
                     </Card>
                 </motion.div>
 

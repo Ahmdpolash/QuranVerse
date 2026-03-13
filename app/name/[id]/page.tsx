@@ -1,5 +1,6 @@
 import { namesData } from "@/lib/data";
 import { NameDetailsClient } from "@/components/name-details-client";
+import { NamesSidebar } from "@/components/names-sidebar";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 
@@ -32,5 +33,12 @@ export default async function NamePage({ params }: Props) {
 
     if (!name) return notFound();
 
-    return <NameDetailsClient name={name} />;
+    return (
+        <div className="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
+            <NamesSidebar names={namesData} currentNameId={name.id} />
+            <div className="flex-1 overflow-x-hidden">
+                <NameDetailsClient name={name} />
+            </div>
+        </div>
+    );
 }

@@ -2,9 +2,7 @@
 
 import { AllahName, getAudioUrl } from "@/lib/data";
 import { Card } from "@/components/ui/card";
-import { Play, Pause } from "lucide-react";
 import Link from "next/link";
-import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 
 interface NameCardProps {
@@ -12,38 +10,6 @@ interface NameCardProps {
 }
 
 export function NameCard({ name }: NameCardProps) {
-    const [isPlaying, setIsPlaying] = useState(false);
-    const audioRef = useRef<HTMLAudioElement | null>(null);
-
-    useEffect(() => {
-        // Only initialize in browser
-        if (typeof window !== "undefined") {
-            audioRef.current = new Audio(getAudioUrl(name));
-            audioRef.current.onended = () => setIsPlaying(false);
-        }
-        return () => {
-            if (audioRef.current) {
-                audioRef.current.pause();
-                audioRef.current = null;
-            }
-        };
-    }, [name]);
-
-    const togglePlay = (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (!audioRef.current) return;
-
-        if (isPlaying) {
-            audioRef.current.pause();
-            setIsPlaying(false);
-        } else {
-            // Pause any other playing audio if needed, simplest is just playing current
-            audioRef.current.play();
-            setIsPlaying(true);
-        }
-    };
-
     return (
         <Link href={`/name/${name.id}`} passHref className="block h-full">
             <motion.div
@@ -69,14 +35,7 @@ export function NameCard({ name }: NameCardProps) {
                         <p className="text-sm text-balance text-muted-foreground line-clamp-2">{name.meaning}</p>
                     </div>
 
-                    <div className="pt-4 mt-auto flex items-center gap-4 w-full justify-between border-t border-border/50">
-                        <button
-                            onClick={togglePlay}
-                            className="flex items-center gap-2 text-sm font-medium text-primary hover:text-accent transition-colors p-2 -ml-2 rounded-full hover:bg-primary/5"
-                            aria-label="Play audio"
-                        >
-                            {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current" />}
-                        </button>
+                    <div className="pt-4 mt-auto flex items-center justify-end w-full border-t border-border/50">
                         <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400 hover:underline">
                             Learn More
                         </span>
